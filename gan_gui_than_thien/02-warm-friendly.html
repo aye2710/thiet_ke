@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dr. Trung – Gần gũi, Thân thiện</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    h1, h2, h3, blockquote, .serif { font-family: 'DM Serif Display', Georgia, serif; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+    body { margin: 0; overflow-x: hidden; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto !important; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body class="bg-[#faf3ea] text-[#3d2c1e] antialiased">
+<div id="root"></div>
+<script>
+// ---- DATA ----
+const PH = (w,h,t) => `https://placehold.co/${w}x${h}/f0f0f0/555?text=${encodeURIComponent(t)}`;
+const doctor = {
+  fullName: "Đàm Quang Trung",
+  degree: "Bác sĩ",
+  hospitalTitle: "Bác sĩ Gây mê Hồi sức & Điều trị đau",
+  specialty: "Điều trị Đau",
+  hospital: "Bệnh viện Bưu Điện",
+  experience: "13+ năm kinh nghiệm lâm sàng",
+  languages: ["Tiếng Việt", "Tiếng Anh"],
+  focusAreas: [
+    "Điều trị đau mạn tính bằng sóng cao tần RF/PRF",
+    "TMS (Từ trường xuyên sọ) trong điều trị đau",
+    "Block thần kinh & Gây tê vùng dưới hướng dẫn siêu âm",
+    "Can thiệp giảm đau không phẫu thuật"
+  ],
+  shortIntroduction: "Bác sĩ Trung chuyên sâu trong lĩnh vực Điều trị Đau, tập trung vào các phương pháp can thiệp giảm đau không xâm lấn, không phẫu thuật như sóng cao tần RF/PRF và TMS, đồng thời đồng hành cùng người bệnh trong quá trình kiểm soát cơn đau mạn tính và cải thiện chất lượng cuộc sống.",
+  fullIntroduction: [
+    "Với nền tảng đào tạo từ Học viện Quân Y và Đại học Y Hà Nội, cùng hơn 13 năm kinh nghiệm lâm sàng tại các bệnh viện lớn, Bác sĩ Trung luôn chú trọng việc lắng nghe để thấu hiểu sâu sắc từng cơn đau của người bệnh. Từ đó, bác sĩ đưa ra những phác đồ điều trị cá nhân hóa tối ưu nhất.",
+    "Hành trình chuyên môn của bác sĩ gắn liền với cam kết không ngừng cập nhật các phương pháp y khoa tiên tiến thông qua các khóa đào tạo quốc tế về PRF, RF và Pain Fellowship, đồng thời đề cao tính nhân văn và sự gần gũi trong tiếp xúc lâm sàng, mang lại cảm giác an tâm và tin cậy tuyệt đối cho người bệnh."
+  ],
+  quote: "Điều trị đau mạn tính không chỉ là làm dịu triệu chứng, mà còn giúp người bệnh tìm lại chất lượng cuộc sống vốn có.",
+  portraitImage: "/images/doctor/doctor-portrait.png",
+  workingImage: "/images/doctor/doctor-working.jpg"
+};
+const certificates = [
+  { id:"cert-01", title:"Bằng Bác sĩ đa khoa", issuer:"Học viện Quân Y", year:"2012", image:"/images/certificates/certificate-01.jpg" },
+  { id:"cert-02", title:"Bằng Thạc sĩ Nội khoa", issuer:"Đại học Y Hà Nội", year:"2018", image:"/images/certificates/certificate-02.jpg" },
+  { id:"cert-03", title:"CME Kỹ thuật tiêm khớp", issuer:"Đại học Y Dược TP. HCM", year:"2022", image:"/images/certificates/certificate-03.jpg" },
+  { id:"cert-04", title:"CME Sóng cao tần cơ bản", issuer:"Đại học Y Dược TP. HCM", year:"2024", image:"/images/certificates/certificate-04.jpg" },
+  { id:"cert-05", title:"Gây tê vùng dưới hướng dẫn siêu âm", issuer:"Đại học Y Dược Hải Phòng", year:"2024", image:"/images/certificates/certificate-05.jpg" },
+  { id:"cert-06", title:"Đào tạo TMS", issuer:"Chứng chỉ chuyên khoa", year:"2025", image:"/images/certificates/certificate-06.png" },
+  { id:"cert-07", title:"CME Siêu âm cơ bản", issuer:"BV Đa khoa Hà Đông", year:"2022", image:"/images/certificates/certificate-07.jpg" },
+  { id:"cert-08", title:"Chứng nhận Gây tê", issuer:"Hoa Kỳ", year:"2025", image:"/images/certificates/certificate-08.png" },
+  { id:"cert-09", title:"Đào tạo RF/PRF chuyên sâu", issuer:"Nebraska, Hoa Kỳ", year:"2025", image:"/images/certificates/certificate-09.jpg" },
+  { id:"cert-10", title:"Thực hành RF/PRF", issuer:"Nebraska, Hoa Kỳ", year:"2025", image:"/images/certificates/certificate-10.jpg" }
+];
+const medicalEvents = [
+  { id:"e1", title:"Báo cáo viên VNC 2024 — Hội nghị Đau toàn quốc", type:"Hội nghị", date:"2024", location:"Việt Nam", summary:"Tham gia với tư cách báo cáo viên, chia sẻ kinh nghiệm lâm sàng trong điều trị đau mạn tính bằng sóng cao tần.", cover:"/images/events/event-01/cover.jpg", images:["/images/events/event-01/img-1.jpg","/images/events/event-01/img-2.jpg","/images/events/event-01/img-3.jpg"] },
+  { id:"e2", title:"Báo cáo viên VNC 2025 — Hội nghị Đau toàn quốc", type:"Hội nghị", date:"2025", location:"Việt Nam", summary:"Tiếp tục tham gia báo cáo viên, cập nhật tiến bộ mới trong điều trị đau.", cover:"/images/events/event-02/cover.jpg", images:["/images/events/event-02/img-1.jpg","/images/events/event-02/img-2.jpg","/images/events/event-02/img-3.jpg"] },
+  { id:"e3", title:"Hội nghị Đau Quốc tế — Thái Lan 2024", type:"Hội nghị", date:"2024", location:"Thái Lan", summary:"Tham dự hội nghị quốc tế chuyên ngành Đau.", cover:"/images/events/event-03/cover.jpg", images:["/images/events/event-03/img-1.jpg","/images/events/event-03/img-2.jpg"] },
+  { id:"e4", title:"The 4th Evolution of PRF Symposium", type:"Diễn đàn", date:"11/2025", location:"Hà Lan - Pháp", summary:"Khóa đào tạo chuyên sâu PRF đạt chuẩn CME Châu Âu.", cover:"/images/events/event-04/cover.jpg", images:["/images/events/event-04/img-1.jpg","/images/events/event-04/img-2.jpg"] },
+  { id:"e5", title:"Hội nghị Phẫu thuật Thần kinh Việt Nam", type:"Hội nghị", date:"2024-2025", location:"Việt Nam", summary:"Tham gia chuỗi hội nghị PT Thần kinh Việt Nam.", cover:"/images/events/event-05/cover.png", images:["/images/events/event-05/img-1.png","/images/events/event-05/img-2.png"] }
+];
+const articles = [
+  { id:"a1", title:"Đau mạn tính là gì? Khi nào bạn nên gặp bác sĩ?", category:"Đau mạn tính", summary:"Đau mạn tính kéo dài trên 3 tháng, ảnh hưởng nghiêm trọng đến chất lượng cuộc sống.", cover:"/images/story/healthy-walking.jpg", date:"15/06/2026", readTime:"5 phút" },
+  { id:"a2", title:"Sóng cao tần RF/PRF là gì?", category:"Công nghệ y khoa", summary:"RF và PRF là phương pháp can thiệp giảm đau tiên tiến, ứng dụng sóng cao tần.", cover:"/images/story/ezgif-1-85f73d73c5.gif", date:"10/06/2026", readTime:"6 phút" },
+  { id:"a3", title:"Đau cổ vai gáy do đâu?", category:"Đau cột sống cổ", summary:"Đau mỏi vai gáy kéo dài có thể là dấu hiệu của tổn thương thần kinh.", cover:"/images/story/body-joints.jpg", date:"05/06/2026", readTime:"4 phút" },
+  { id:"a4", title:"TMS — Phương pháp mới trong điều trị đau", category:"Phương pháp điều trị", summary:"TMS kích thích từ trường lên vỏ não, giúp điều chỉnh tín hiệu đau.", cover:"/images/story/rehabilitation.jpg", date:"28/05/2026", readTime:"5 phút" },
+  { id:"a5", title:"Đau sau Zona thần kinh", category:"Góc cảnh giác y khoa", summary:"Đau sau Zona là biến chứng khi virus thủy đậu tái hoạt động.", cover:"/images/story/treatment-philosophy.jpg", date:"20/05/2026", readTime:"7 phút" },
+  { id:"a6", title:"Đau dây thần kinh chẩm", category:"Bệnh lý thần kinh", summary:"Đau dây thần kinh chẩm gây đau nhức vùng đầu và cổ.", cover:"/images/story/medical-education.jpg", date:"12/05/2026", readTime:"4 phút" }
+];
+const painPoints = [
+  { num:"01", title:"Đau khớp gối", desc:"Những cơn đau âm ỉ tăng lên khi lên xuống cầu thang, gây cản trở đi lại hàng ngày." },
+  { num:"02", title:"Đau vai gáy", desc:"Cảm giác đau mỏi ê ẩm vùng cổ vai, hạn chế tầm vận động quay đầu." },
+  { num:"03", title:"Đau cột sống", desc:"Đau mỏi thắt lưng sau khi ngồi hoặc đứng lâu, giảm hiệu suất lao động." },
+  { num:"04", title:"Thoát vị đĩa đệm", desc:"Nhân nhầy đĩa đệm chèn ép rễ thần kinh, gây đau buốt lan xuống chân." },
+  { num:"05", title:"Thoái hóa khớp", desc:"Sụn khớp bào mòn theo thời gian, gây viêm sưng khớp định kỳ." },
+  { num:"06", title:"Hạn chế vận động", desc:"Cơ thể giảm linh hoạt, người bệnh e ngại di chuyển." }
+];
+const philosophies = [
+  { num:"01", title:"Điều trị đúng nguyên nhân", desc:"Không chỉ làm dịu cơn đau tức thời, bác sĩ tìm nguồn gốc thực thể qua chẩn đoán chính xác." },
+  { num:"02", title:"Ưu tiên bảo tồn", desc:"Ưu tiên phương pháp không phẫu thuật như tiêm khớp, thuốc thế hệ mới kết hợp tập luyện." },
+  { num:"03", title:"Cá nhân hóa", desc:"Phác đồ thiết kế riêng biệt theo độ tuổi, công việc và thể trạng từng người." },
+  { num:"04", title:"Theo dõi lâu dài", desc:"Đồng hành cùng người bệnh thiết lập bài tập phục hồi, duy trì sức mạnh cơ xương khớp." }
+];
+const journeySteps = [
+  { num:"01", title:"Đặt lịch khám", desc:"Hẹn giờ qua tổng đài hoặc cổng đăng ký bệnh viện." },
+  { num:"02", title:"Khám lâm sàng", desc:"Bác sĩ nghe bệnh sử, kiểm tra khớp và đo tầm vận động." },
+  { num:"03", title:"Chẩn đoán hình ảnh", desc:"Siêu âm, X-quang hoặc MRI khi cần thiết." },
+  { num:"04", title:"Tư vấn phác đồ", desc:"Giải thích tình trạng và đề xuất phác đồ cá nhân hóa." },
+  { num:"05", title:"Theo dõi y khoa", desc:"Kiểm tra đáp ứng thuốc và giảm đau định kỳ." },
+  { num:"06", title:"Phục hồi vận động", desc:"Bài tập bổ trợ tại nhà giúp tăng biên độ vận động." }
+];
+
+// Placeholder images
+doctor.portraitImage = PH(400,500,"Dr. Trung");
+doctor.workingImage = PH(800,450,"Bac si Trung");
+certificates.forEach(c => c.image = PH(320,240,"Chung chi"));
+articles.forEach(a => a.cover = PH(600,375,"Bai viet"));
+medicalEvents.forEach(e => {
+  e.cover = PH(600,450,e.title.slice(0,20));
+  e.images = e.images.map(() => PH(600,450,"Hinh anh"));
+});
+
+const sectionIds = ["home","doctor-profile","certificates","events","knowledge","pain-points","philosophy","journey","booking"];
+let isMobileOpen = false;
+const state = { activeSection: "home" };
+
+function render() {
+  document.getElementById("root").innerHTML = `
+    ${renderHeader()}
+    ${renderMobileMenu()}
+    <main class="max-w-[1280px] mx-auto px-6 md:px-8 pt-24 pb-12">
+      ${renderHero()}
+      ${renderDoctorProfile()}
+      ${renderCertificates()}
+      ${renderEvents()}
+      ${renderKnowledge()}
+      ${renderPainPoints()}
+      ${renderPhilosophy()}
+      ${renderJourney()}
+      ${renderBooking()}
+    </main>
+    ${renderFooter()}
+    <div id="lightbox"></div>
+    <div id="event-gallery"></div>
+  `;
+  setupObservers();
+  setupMobileMenu();
+}
+
+function getLabel(id) {
+  const map = { "home":"Giới thiệu chung","doctor-profile":"Thông tin bác sĩ","certificates":"Chứng nhận","events":"Hội nghị & Hội thảo","knowledge":"Kiến thức","pain-points":"Vấn đề thường gặp","philosophy":"Triết lý điều trị","journey":"Hành trình thăm khám","booking":"Đặt lịch khám" };
+  return map[id] || id;
+}
+
+// ----- HEADER -----
+const accentColor = "text-[#059669]";
+const accentBg = "bg-[#059669]";
+const accentBorder = "border-[#059669]";
+const accentHover = "hover:bg-[#047857]";
+const accentLight = "bg-[#ecfdf5]";
+const accentLightText = "text-[#059669]";
+
+function renderHeader() {
+  const active = state.activeSection;
+  const linkClass = (ids) => (ids.includes(active) ? "text-[#059669] font-semibold" : "text-[#7a6a5a] hover:text-[#059669]");
+  return `
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-40 bg-[#faf3ea]/90 backdrop-blur-md border-b border-[#e8dccc] transition-all duration-300">
+    <div class="max-w-[1280px] mx-auto px-6 md:px-8 flex items-center justify-between h-16 md:h-18">
+      <a href="#home" class="flex flex-col">
+        <span class="text-xl font-bold tracking-tight text-[#3d2c1e] serif">Dr. Trung</span>
+        <span class="text-[10px] uppercase tracking-widest text-[#8b7a6a] font-medium">Chuyên khoa Điều trị Đau</span>
+      </a>
+      <nav class="hidden lg:flex items-center gap-8">
+        <a href="#home" class="text-sm tracking-wide transition-colors ${linkClass(["home","doctor-profile"])}">Giới thiệu</a>
+        <a href="#certificates" class="text-sm tracking-wide transition-colors ${linkClass(["certificates"])}">Chứng chỉ</a>
+        <a href="#events" class="text-sm tracking-wide transition-colors ${linkClass(["events"])}">Hoạt động</a>
+        <a href="#knowledge" class="text-sm tracking-wide transition-colors ${linkClass(["knowledge"])}">Kiến thức</a>
+        <a href="#booking" class="text-sm tracking-wide transition-colors ${linkClass(["booking"])}">Đặt lịch</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="#booking" class="hidden sm:inline-flex items-center bg-[#059669] hover:bg-[#047857] text-white text-sm font-medium px-5 py-2.5 rounded-full transition-colors shadow-sm">Đặt lịch khám</a>
+        <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 text-[#7a6a5a] hover:bg-[#efe6d8] rounded-full transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>`;
+}
+
+function renderMobileMenu() {
+  return `
+  <div id="mobile-menu" class="fixed inset-0 z-50 hidden bg-[#3d2c1e]/40 backdrop-blur-sm" onclick="closeMobileMenu()">
+    <div class="w-full max-w-sm h-full bg-[#faf3ea] shadow-2xl flex flex-col p-6 ml-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-[#e8dccc]">
+        <div>
+          <h2 class="text-xl font-bold text-[#3d2c1e] serif">Dr. Trung</h2>
+          <p class="text-xs uppercase tracking-wider text-[#8b7a6a]">Điều trị Đau</p>
+        </div>
+        <button onclick="closeMobileMenu()" class="p-3 text-[#7a6a5a] hover:bg-[#efe6d8] rounded-full transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <nav class="flex flex-col gap-1 mt-6 flex-1">
+        ${sectionIds.map(id => `<a href="#${id}" onclick="closeMobileMenu()" class="flex items-center text-base px-4 py-3 rounded-xl font-medium text-[#5a4a3a] hover:text-[#059669] hover:bg-[#efe6d8] transition-colors">${getLabel(id)}</a>`).join("")}
+      </nav>
+      <div class="border-t border-[#e8dccc] pt-6">
+        <a href="#booking" onclick="closeMobileMenu()" class="flex items-center justify-center bg-[#059669] hover:bg-[#047857] text-white rounded-xl text-base font-semibold py-3 transition-colors">Đặt lịch khám</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ----- SECTIONS -----
+function renderHero() {
+  return `
+  <section id="home" class="min-h-[85vh] flex items-center py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 w-full items-center">
+      <div class="lg:col-span-7">
+        <span class="inline-block text-[11px] uppercase tracking-[0.2em] text-[#059669] font-medium bg-[#d1fae5] px-4 py-1.5 rounded-full mb-6">CHUYÊN KHOA ĐIỀU TRỊ ĐAU</span>
+        <h1 class="text-4xl md:text-5xl lg:text-7xl serif text-[#3d2c1e] leading-tight tracking-tight mb-4">${doctor.fullName}</h1>
+        <p class="text-lg md:text-xl text-[#5a4a3a] font-medium mb-2">${doctor.degree} · ${doctor.hospitalTitle}</p>
+        <p class="text-sm text-[#8b7a6a] mb-6">Hiện đang công tác tại <span class="text-[#3d2c1e] font-semibold">${doctor.hospital}</span></p>
+        <p class="text-base md:text-lg text-[#5a4a3a] leading-relaxed mb-8 max-w-xl">${doctor.shortIntroduction}</p>
+        <div class="border-l-4 border-[#059669] pl-5 py-2 mb-8 max-w-lg text-[#3d2c1e] text-base md:text-lg serif italic">"${doctor.quote}"</div>
+        <div class="flex flex-col sm:flex-row gap-4 mb-10">
+          <a href="#booking" class="inline-flex items-center justify-center gap-2 bg-[#059669] hover:bg-[#047857] text-white text-base font-semibold px-8 py-3.5 rounded-full transition-all shadow-sm">Đặt lịch khám tại bệnh viện</a>
+          <a href="#doctor-profile" class="inline-flex items-center justify-center gap-2 bg-white hover:bg-[#efe6d8] text-[#3d2c1e] border border-[#d4c5b5] text-base font-medium px-8 py-3.5 rounded-full transition-all">Tìm hiểu về bác sĩ</a>
+        </div>
+        <div class="grid grid-cols-3 gap-6 pt-6 border-t border-[#e8dccc] w-full max-w-md">
+          <div><p class="text-2xl serif italic text-[#059669] font-bold">13+</p><p class="text-xs text-[#8b7a6a] mt-1 uppercase tracking-wider">Năm kinh nghiệm</p></div>
+          <div><p class="text-2xl serif italic text-[#059669] font-bold">Không XN</p><p class="text-xs text-[#8b7a6a] mt-1 uppercase tracking-wider">Không xâm lấn</p></div>
+          <div><p class="text-2xl serif italic text-[#059669] font-bold">Quốc tế</p><p class="text-xs text-[#8b7a6a] mt-1 uppercase tracking-wider">Đào tạo CME</p></div>
+        </div>
+      </div>
+      <div class="lg:col-span-5 flex justify-center">
+        <div class="w-full max-w-md aspect-[4/5] rounded-[32px] overflow-hidden bg-[#e8dccc] border-4 border-white shadow-lg">
+          <img src="${doctor.portraitImage}" alt="Dr. Trung" class="w-full h-full object-cover" />
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderDoctorProfile() {
+  return `
+  <section id="doctor-profile" class="py-20 border-t border-[#e8dccc]">
+    <div class="max-w-4xl">
+      <span class="text-[11px] uppercase tracking-[0.2em] text-[#059669] font-medium bg-[#d1fae5] px-3 py-1 rounded-full">THÔNG TIN BÁC SĨ</span>
+      <h2 class="text-3xl md:text-5xl serif text-[#3d2c1e] leading-tight mt-4 mb-4">Chuyên môn Điều trị Đau được xây dựng từ quá trình học tập và thực hành lâm sàng.</h2>
+      <p class="text-base md:text-lg text-[#5a4a3a] leading-relaxed mb-12">Bác sĩ Trung hiện công tác tại Bệnh viện Bưu Điện, tập trung vào các phương pháp can thiệp giảm đau không xâm lấn.</p>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div class="lg:col-span-4 bg-white border border-[#e8dccc] rounded-3xl p-6 md:p-8 shadow-sm">
+        <h3 class="text-xl font-bold text-[#3d2c1e] serif">${doctor.fullName}</h3>
+        <p class="text-sm font-medium text-[#059669] mt-1 uppercase tracking-wider">Chuyên khoa ${doctor.specialty}</p>
+        <hr class="my-5 border-[#e8dccc]" />
+        <div class="flex flex-col gap-5">
+          <div class="flex gap-3 items-start"><div class="w-10 h-10 rounded-xl bg-[#d1fae5] text-[#059669] flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/></svg></div><div><p class="text-[10px] uppercase tracking-wider text-[#8b7a6a]">Học vị</p><p class="text-sm font-semibold text-[#3d2c1e] mt-0.5">${doctor.degree}</p></div></div>
+          <div class="flex gap-3 items-start"><div class="w-10 h-10 rounded-xl bg-[#d1fae5] text-[#059669] flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><div><p class="text-[10px] uppercase tracking-wider text-[#8b7a6a]">Chức danh</p><p class="text-sm font-semibold text-[#3d2c1e] mt-0.5">${doctor.hospitalTitle}</p></div></div>
+          <div class="flex gap-3 items-start"><div class="w-10 h-10 rounded-xl bg-[#d1fae5] text-[#059669] flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div><div><p class="text-[10px] uppercase tracking-wider text-[#8b7a6a]">Nơi công tác</p><p class="text-sm font-semibold text-[#3d2c1e] mt-0.5">${doctor.hospital}</p></div></div>
+        </div>
+        <hr class="my-5 border-[#e8dccc]" />
+        <h4 class="text-xs uppercase tracking-widest font-bold text-[#059669] mb-3">Lĩnh vực tập trung</h4>
+        <ul class="flex flex-col gap-2">${doctor.focusAreas.map(a => `<li class="flex gap-2 items-start text-xs text-[#5a4a3a]"><span class="w-1.5 h-1.5 rounded-full bg-[#059669] flex-shrink-0 mt-1.5"></span>${a}</li>`).join("")}</ul>
+      </div>
+      <div class="lg:col-span-8 flex flex-col gap-8">
+        ${doctor.fullIntroduction.map(p => `<p class="text-base md:text-lg text-[#5a4a3a] leading-relaxed">${p}</p>`).join("")}
+        <blockquote class="bg-white border-l-4 border-[#059669] rounded-r-2xl p-6 text-[#3d2c1e] serif italic text-lg shadow-sm">"Điều trị đau mạn tính là một hành trình, không phải một lần can thiệp đơn lẻ."<cite class="block text-xs uppercase tracking-widest text-[#8b7a6a] font-medium not-italic mt-3 font-sans">— Bác sĩ Trung</cite></blockquote>
+        <div class="rounded-3xl overflow-hidden border-2 border-white shadow-lg aspect-video bg-[#e8dccc]"><img src="${doctor.workingImage}" alt="Bác sĩ Trung" class="w-full h-full object-cover" /></div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderCertificates() {
+  return `
+  <section id="certificates" class="py-20 border-t border-[#e8dccc]">
+    <div class="max-w-3xl mb-12">
+      <span class="text-[11px] uppercase tracking-[0.2em] text-[#059669] font-medium bg-[#d1fae5] px-3 py-1 rounded-full">CHỨNG NHẬN CHUYÊN MÔN</span>
+      <h2 class="text-3xl md:text-5xl serif text-[#3d2c1e] leading-tight mt-4 mb-4">Những dấu mốc chuyên môn trên hành trình chăm sóc người bệnh.</h2>
+    </div>
+    <div class="flex gap-6 overflow-x-auto no-scrollbar pb-4 snap-x snap-mandatory">
+      ${certificates.map((c, i) => `
+      <div class="flex-shrink-0 w-[280px] snap-start cursor-pointer" onclick="openLightbox(${i})">
+        <div class="bg-white border border-[#e8dccc] hover:border-[#059669] transition-all duration-300 rounded-2xl overflow-hidden group shadow-sm">
+          <div class="aspect-[4/3] bg-[#efe6d8] overflow-hidden"><img src="${c.image}" alt="${c.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" /></div>
+          <div class="p-3"><h4 class="text-xs font-semibold text-[#3d2c1e] group-hover:text-[#059669] transition-colors line-clamp-1">${c.title}</h4><p class="text-[10px] text-[#8b7a6a] mt-0.5">${c.issuer} · ${c.year}</p></div>
+        </div>
+      </div>`).join("")}
+    </div>
+  </section>`;
+}
+
+function renderEvents() {
+  const evts = medicalEvents.map((e, i) => {
+    const isOdd = i % 2 === 0;
+    return `
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center py-10 border-b border-[#e8dccc] last:border-0">
+      <div class="lg:col-span-5 ${isOdd ? "lg:order-1" : "lg:order-2"}">
+        <div class="aspect-[4/3] rounded-3xl overflow-hidden bg-[#efe6d8] border-2 border-white shadow-md relative group">
+          <img src="${e.cover}" alt="${e.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+          <span class="absolute top-4 left-4 bg-white/90 text-[#059669] text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-wider">${e.type}</span>
+        </div>
+      </div>
+      <div class="lg:col-span-7 ${isOdd ? "lg:order-2" : "lg:order-1"}">
+        <span class="text-4xl serif italic text-[#d4c5b5] leading-none mb-2 block">${String(i+1).padStart(2,"0")}</span>
+        <h3 class="text-xl md:text-2xl serif text-[#3d2c1e] font-bold leading-snug mb-3">${e.title}</h3>
+        <div class="flex flex-wrap gap-3 text-xs font-medium text-[#8b7a6a] mb-4">
+          <span class="bg-[#efe6d8] px-3 py-1 rounded-full">${e.date}</span>
+          <span class="bg-[#efe6d8] px-3 py-1 rounded-full">${e.location}</span>
+        </div>
+        <p class="text-sm md:text-base text-[#5a4a3a] leading-relaxed mb-6">${e.summary}</p>
+        <div class="flex items-center gap-4 pt-4 border-t border-[#e8dccc]">
+          <div class="flex gap-2">${e.images.slice(0,3).map(img => `<div class="w-14 h-10 rounded-xl overflow-hidden border border-[#e8dccc] bg-[#efe6d8]"><img src="${img}" alt="" class="w-full h-full object-cover" /></div>`).join("")}</div>
+          <button onclick="openEventGallery(${i})" class="text-xs font-semibold text-[#059669] hover:text-[#047857] uppercase tracking-wider ml-auto transition-colors">Xem ảnh</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+  return `
+  <section id="events" class="py-20 border-t border-[#e8dccc]">
+    <div class="max-w-3xl mb-12">
+      <span class="text-[11px] uppercase tracking-[0.2em] text-[#059669] font-medium bg-[#d1fae5] px-3 py-1 rounded-full">HỘI NGHỊ · DIỄN ĐÀN · HỘI THẢO</span>
+      <h2 class="text-3xl md:text-5xl serif text-[#3d2c1e] leading-tight mt-4 mb-4">Kết nối chuyên môn và cập nhật tiến bộ mới trong y khoa.</h2>
+    </div>
+    ${evts}
+  </section>`;
+}
+
+function renderKnowledge() {
+  return `
+  <section id="knowledge" class="py-20 border-t border-[#e8dccc]">
+    <div class="max-w-3xl mb-12">
+      <span class="text-[11px] uppercase tracking-[0.2em] text-[#059669] font-medium bg-[#d1fae5] px-3 py-1 rounded-full">GÓC KIẾN THỨC Y KHOA</span>
+      <h2 class="text-3xl md:text-5xl serif text-[#3d2c1e] leading-tight mt-4 mb-4">Hiểu đúng để kiểm soát đau và chăm sóc sức khỏe đúng cách.</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      ${articles.map(a => `
+      <article class="bg-white border border-[#e8dccc] rounded-3xl overflow-hidden hover:shadow-md transition-shadow group">
+        <div class="aspect-[16/10] bg-[#efe6d8] overflow-hidden relative">
+          <img src="${a.cover}" alt="${a.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+          <span class="absolute top-4 left-4 bg-white/90 text-[#059669] text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-wider">${a.category}</span>
+        </div>
+        <div class="p-5 md:p-6">
+          <div class="flex gap-4 text-[10px] font-medium text-[#8b7a6a] mb-3">
+            <span>${a.date}</span>
+            <span class="flex items-center gap-1">${a.readTime}</span>
+          </div>
+          <h3 class="text-lg md:text-xl font-bold text-[#3d2c1e] serif group-hover:text-[#059669] transition-colors line-clamp-2 mb-2">${a.title}</h3>
+          <p class="text-sm text-[#5a4a3a] leading-relaxed line-clamp-3">${a.summary}</p>
+          <div class="pt-4 mt-4 border-t border-[#e8dccc]">
+            <a href="#booking" class="inline-flex items-center gap-1 text-xs font-semibold text-[#059669] group-hover:text-[#047857] uppercase tracking-wider transition-colors">Đọc bài viết <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a>
+          </div>
+        </div>
+      </article>`).join("")}
+    </div>
+  </section>`;
+}
+
+function renderPainPoints() {
+  return `
+  <section id="pain-points" class="py-20 border-t border-[#e8dccc]">
+    <div class="max-w-3xl mb-12">
+      <span class="text-[11px] uppercase tracking-[0.2em] text-[#059669] font-medium bg-[#d1fae5] px-3 py-1 rounded-full">VẤN ĐỀ THƯỜNG GẶP</span>
+      <h2 class="text-3xl md:text-5xl serif text-[#3d2c1e] leading-tight mt-4 mb-4">Cơn đau không chỉ ảnh hưởng đến khớp, mà còn thay đổi cách sống.</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      ${painPoints.map(p => `
+      <div class="bg-white border border-[#e8dccc] rounded-3xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-[#059669] group">
+        <span class="text-3xl serif italic text-[#d4c5b5] group-hover:text-[#059669] transition-colors">${p.num}</span>
+        <h3 class="text-lg md:text-xl font-bold text-[#3d2c1e] serif group-hover:text-[#059669] transition-colors mt-3 mb-2">${p.title}</h3>
+        <p class="text-sm md:text-base text-[#5a4a3a] leading-relaxed">${p.desc}</p>
+      </div>`).join("")}
+    </div>
+  </section>`;
+}
+
+function renderPhilosophy() {
+  return `
+  <section id="philosophy" class="py-20 border-t border-[#e8dccc]">
+    <div class="max-w-3xl mb-12">
+      <span class="text-[11px] uppercase tracking-[0.2em] text-[#059669] font-medium bg-[#d1fae5] px-3 py-1 rounded-full">TRIẾT LÝ ĐIỀU TRỊ</span>
+      <h2 class="text-3xl md:text-5xl serif text-[#3d2c1e] leading-tight mt-4 mb-4">Những nguyên tắc trong hành trình chăm sóc người bệnh.</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      ${philosophies.map(p => `
+      <div class="bg-white border border-[#e8dccc] rounded-3xl p-6 md:p-8 hover:border-[#059669] hover:shadow-md transition-all group">
+        <div class="flex items-center gap-4 mb-3">
+          <span class="w-12 h-12 rounded-2xl bg-[#d1fae5] text-[#059669] flex items-center justify-center text-sm font-bold">${p.num}</span>
+          <span class="text-xs font-semibold text-[#059669] tracking-wider">NGUYÊN TẮC</span>
+        </div>
+        <h3 class="text-lg md:text-xl font-bold text-[#3d2c1e] serif group-hover:text-[#059669] transition-colors mb-2">${p.title}</h3>
+        <p class="text-sm md:text-base text-[#5a4a3a] leading-relaxed">${p.desc}</p>
+      </div>`).join("")}
+    </div>
+  </section>`;
+}
+
+function renderJourney() {
+  return `
+  <section id="journey" class="py-20 border-t border-[#e8dccc]">
+    <div class="max-w-3xl mb-16">
+      <span class="text-[11px] uppercase tracking-[0.2em] text-[#059669] font-medium bg-[#d1fae5] px-3 py-1 rounded-full">HÀNH TRÌNH THĂM KHÁM</span>
+      <h2 class="text-3xl md:text-5xl serif text-[#3d2c1e] leading-tight mt-4 mb-4">Một hành trình rõ ràng từ thăm khám đến phục hồi.</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-4 text-center relative">
+      <div class="absolute top-[20px] left-[5%] right-[5%] h-[2px] bg-[#d4c5b5] hidden lg:block pointer-events-none"></div>
+      ${journeySteps.map((s,i) => `
+      <div class="relative lg:mt-8">
+        <div class="w-5 h-5 rounded-full border-2 border-[#059669] bg-white mx-auto mb-4"></div>
+        <span class="text-xl serif italic text-[#059669] font-bold">${s.num}</span>
+        <h3 class="text-base font-semibold text-[#3d2c1e] mt-2">${s.title}</h3>
+        <p class="text-xs md:text-sm text-[#8b7a6a] mt-1 leading-relaxed">${s.desc}</p>
+      </div>`).join("")}
+    </div>
+  </section>`;
+}
+
+function renderBooking() {
+  return `
+  <section id="booking" class="py-20 border-t border-[#e8dccc]">
+    <div class="max-w-3xl mb-12">
+      <span class="text-[11px] uppercase tracking-[0.2em] text-[#059669] font-medium bg-[#d1fae5] px-3 py-1 rounded-full">LIÊN HỆ & ĐẶT LỊCH</span>
+      <h2 class="text-3xl md:text-5xl serif text-[#3d2c1e] leading-tight mt-4 mb-4">Bắt đầu hành trình điều trị đau đúng cách.</h2>
+      <p class="text-base md:text-lg text-[#5a4a3a] leading-relaxed">Bác sĩ Trung hiện thực hiện lịch khám tại bệnh viện. Đăng ký hẹn giờ qua cổng y khoa.</p>
+    </div>
+    <div class="bg-white border border-[#e8dccc] rounded-3xl p-6 md:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 shadow-sm">
+      <div class="lg:col-span-7 flex flex-col gap-6">
+        <div class="flex gap-4 items-start"><div class="w-12 h-12 rounded-2xl bg-[#d1fae5] text-[#059669] flex items-center justify-center flex-shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div><div><h4 class="text-xs uppercase tracking-wider text-[#8b7a6a] font-medium">Đơn vị công tác</h4><p class="text-base font-semibold text-[#3d2c1e] mt-1">${doctor.hospital}</p><p class="text-sm text-[#5a4a3a]">Khoa Gây mê Hồi sức & Điều trị đau</p></div></div>
+        <div class="flex gap-4 items-start"><div class="w-12 h-12 rounded-2xl bg-[#d1fae5] text-[#059669] flex items-center justify-center flex-shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><div><h4 class="text-xs uppercase tracking-wider text-[#8b7a6a] font-medium">Địa điểm</h4><p class="text-base font-semibold text-[#3d2c1e] mt-1">Phòng khám Điều trị Đau - Khu khám theo yêu cầu</p><p class="text-sm text-[#5a4a3a]">Sảnh A, Tòa nhà hành chính trung tâm</p></div></div>
+        <div class="flex gap-4 items-start"><div class="w-12 h-12 rounded-2xl bg-[#d1fae5] text-[#059669] flex items-center justify-center flex-shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><div><h4 class="text-xs uppercase tracking-wider text-[#8b7a6a] font-medium">Lịch khám</h4><p class="text-base font-semibold text-[#3d2c1e] mt-1">Thứ Hai - Thứ Sáu (07:30 - 16:30)</p><p class="text-sm text-[#5a4a3a]">* Lịch có thể thay đổi</p></div></div>
+        <div class="bg-[#f0fdf4] border border-[#bbf7d0] rounded-2xl p-5 flex items-start gap-4">
+          <svg class="w-6 h-6 text-[#059669] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div class="text-sm text-[#3d2c1e] leading-relaxed"><strong class="font-semibold text-[#059669] block mb-1 uppercase tracking-wide text-xs">Thông báo</strong>Bác sĩ Trung chỉ tiếp nhận khám qua hệ thống lịch hẹn của bệnh viện. Không tự tiếp nhận đặt lịch riêng.</div>
+        </div>
+      </div>
+      <div class="lg:col-span-5 bg-[#faf3ea] border border-[#e8dccc] rounded-2xl p-6 md:p-8 flex flex-col justify-center items-stretch gap-4 text-center">
+        <h3 class="text-xl font-bold text-[#3d2c1e] serif">Đăng ký khám y khoa</h3>
+        <p class="text-xs text-[#8b7a6a] mb-2">Chuyển tiếp sang hệ thống đặt lịch bệnh viện.</p>
+        <a href="#" class="inline-flex items-center justify-center gap-2 bg-[#059669] hover:bg-[#047857] text-white text-base font-semibold px-6 py-3.5 rounded-full transition-colors shadow-sm">Đặt lịch khám</a>
+        <a href="#" class="inline-flex items-center justify-center bg-white hover:bg-[#efe6d8] text-[#3d2c1e] border border-[#d4c5b5] text-sm font-medium px-6 py-3 rounded-full transition-all">Xem lịch chi tiết</a>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderFooter() {
+  return `
+  <footer class="bg-[#3d2c1e] text-white py-12 md:py-16 mt-12">
+    <div class="max-w-[1280px] mx-auto px-6 md:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-10 border-b border-[#5a4a3a]">
+        <div>
+          <span class="text-2xl font-bold tracking-tight serif">Dr. Trung</span>
+          <span class="block text-xs uppercase tracking-widest text-[#a69480] font-medium mt-1">Chuyên khoa Điều trị Đau</span>
+          <p class="text-[#a69480] text-sm mt-4 max-w-sm leading-relaxed">Đồng hành cùng người bệnh trong quá trình kiểm soát cơn đau, phục hồi vận động và duy trì chất lượng cuộc sống.</p>
+        </div>
+        <div>
+          <h4 class="text-xs uppercase tracking-widest font-semibold text-[#a69480] mb-4">Liên kết nhanh</h4>
+          <nav class="flex flex-col gap-2.5">${["home","doctor-profile","certificates","events","booking"].map(id => `<a href="#${id}" class="text-sm text-[#a69480] hover:text-white transition-colors w-fit">${getLabel(id)}</a>`).join("")}</nav>
+        </div>
+        <div>
+          <h4 class="text-xs uppercase tracking-widest font-semibold text-[#a69480] mb-4">Thông tin công tác</h4>
+          <p class="text-sm text-[#a69480] leading-relaxed"><strong class="font-semibold text-white">Đơn vị công tác:</strong><br />${doctor.hospital}</p>
+          <p class="text-xs text-[#8b7a6a] mt-3">* Mọi yêu cầu thăm khám qua cổng thông tin bệnh viện.</p>
+        </div>
+      </div>
+      <div class="pt-8 flex flex-col md:flex-row gap-6 justify-between text-xs text-[#8b7a6a]">
+        <div class="max-w-2xl"><strong class="text-[#a69480] uppercase block mb-1">Tuyên bố miễn trừ trách nhiệm</strong>Nội dung chỉ mang tính tham khảo, không thay thế thăm khám trực tiếp.</div>
+        <div>&copy; ${new Date().getFullYear()} Dr. Trung.</div>
+      </div>
+    </div>
+  </footer>`;
+}
+
+// ---- INTERACTIONS ----
+function toggleMobileMenu() {
+  isMobileOpen = !isMobileOpen;
+  document.getElementById("mobile-menu").classList.toggle("hidden", !isMobileOpen);
+  document.body.style.overflow = isMobileOpen ? "hidden" : "";
+}
+function closeMobileMenu() {
+  isMobileOpen = false;
+  document.getElementById("mobile-menu").classList.add("hidden");
+  document.body.style.overflow = "";
+}
+function setupMobileMenu() {
+  document.getElementById("mobile-menu").addEventListener("click", function(e) {
+    if (e.target === this) closeMobileMenu();
+  });
+}
+
+function setupObservers() {
+  const options = { root: null, rootMargin: "-30% 0px -50% 0px", threshold: 0 };
+  const observer = new IntersectionObserver((entries) => {
+    const intersecting = entries.filter(e => e.isIntersecting);
+    if (intersecting.length > 0) {
+      const sorted = intersecting.sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      state.activeSection = sorted[0].target.id;
+      const oldHeader = document.getElementById("main-header");
+      const newHeader = document.createElement("div");
+      newHeader.innerHTML = renderHeader();
+      oldHeader.replaceWith(newHeader.firstElementChild);
+      setupObservers();
+      setupMobileMenu();
+    }
+  }, options);
+  sectionIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+}
+
+// Lightbox
+let lightboxImages = [];
+function openLightbox(index) {
+  lightboxImages = certificates.map(c => ({ src: c.image, title: c.title, issuer: c.issuer, year: c.year }));
+  showLightbox(index);
+}
+function showLightbox(idx) {
+  const img = lightboxImages[idx];
+  if (!img) return;
+  document.getElementById("lightbox").innerHTML = [
+    '<div class="fixed inset-0 z-50 flex items-center justify-center bg-[#3d2c1e]/95 backdrop-blur-sm p-4 md:p-8" onclick="closeLightbox()">',
+    '<div class="relative flex items-center justify-center w-full max-w-4xl flex-1">',
+    '<button onclick="showLightbox(' + ((idx-1+lightboxImages.length)%lightboxImages.length) + ')" class="absolute left-2 md:left-4 p-3 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>',
+    '<div class="flex flex-col items-center max-h-[82vh] px-12 md:px-20">',
+    '<img src="' + img.src + '" alt="' + img.title + '" class="max-h-[60vh] max-w-full object-contain rounded-2xl bg-white p-2 shadow-2xl" />',
+    '<div class="mt-4 text-center text-white"><h3 class="text-xl font-bold serif">' + img.title + '</h3><p class="text-white/60 text-sm mt-1">' + img.issuer + ' \u00b7 ' + img.year + '</p><p class="text-white/40 text-xs mt-2">' + (idx+1) + ' / ' + lightboxImages.length + '</p></div>',
+    '</div>',
+    '<button onclick="showLightbox(' + ((idx+1)%lightboxImages.length) + ')" class="absolute right-2 md:right-4 p-3 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>',
+    '</div>',
+    '<button onclick="closeLightbox()" class="absolute top-4 right-4 p-3 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>',
+    '</div>'
+  ].join("");
+  document.body.style.overflow = "hidden";
+  document.addEventListener("keydown", le);
+}
+function le(e) { if (e.key === "Escape") closeLightbox(); }
+function closeLightbox() { document.getElementById("lightbox").innerHTML = ""; document.body.style.overflow = ""; document.removeEventListener("keydown", le); }
+
+// Event Gallery
+let eg = [], egi = 0;
+function openEventGallery(i) { const e = medicalEvents[i]; eg = e.images; egi = 0; showEG(e.title); }
+function showEG(t) {
+  if (!eg[egi]) return;
+  var dots = "";
+  for (var di = 0; di < eg.length; di++) {
+    dots += '<button onclick="jEG(' + di + ')" class="w-2.5 h-2.5 rounded-full transition-all ' + (di===egi ? "bg-white w-6" : "bg-white/40 hover:bg-white/70") + '"></button>';
+  }
+  document.getElementById("event-gallery").innerHTML = [
+    '<div class="fixed inset-0 z-50 flex flex-col bg-[#3d2c1e]/95 backdrop-blur-sm p-4 md:p-8" onclick="closeEG()">',
+    '<div class="flex items-center justify-between pb-4 border-b border-white/10">',
+    '<h3 class="text-white text-lg font-semibold serif truncate max-w-lg">' + t + '</h3>',
+    '<button onclick="closeEG()" class="p-3 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>',
+    '</div>',
+    '<div class="relative flex items-center justify-center flex-1 my-4">',
+    '<button onclick="cEG(-1)" class="absolute left-2 md:left-4 p-3 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>',
+    '<div class="flex flex-col items-center max-h-[62vh] px-12 md:px-20">',
+    '<img src="' + eg[egi] + '" alt="" class="max-h-[52vh] max-w-full object-contain rounded-2xl shadow-2xl" />',
+    '</div>',
+    '<button onclick="cEG(1)" class="absolute right-2 md:right-4 p-3 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>',
+    '</div>',
+    '<div class="flex items-center justify-center gap-2 pt-4 border-t border-white/10">' + dots + '</div>',
+    '</div>'
+  ].join("");
+  document.body.style.overflow = "hidden";
+}
+function cEG(d) { egi = (egi+d+eg.length)%eg.length; var th = document.querySelector("#event-gallery h3"); showEG(th ? th.textContent : ""); }
+function jEG(i) { egi = i; var th = document.querySelector("#event-gallery h3"); showEG(th ? th.textContent : ""); }
+function closeEG() { document.getElementById("event-gallery").innerHTML = ""; document.body.style.overflow = ""; }
+
+render();
+</script>
+</body>
+</html>

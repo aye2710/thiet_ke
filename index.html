@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dr. Trung — Design Variants</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
+    body { background: #f5f5f7; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+    h1 { font-size: 1.5rem; color: #1a1a2e; margin-bottom: 0.5rem; }
+    p { color: #6b7280; margin-bottom: 2rem; }
+    .cards { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; }
+    .card { background: white; border-radius: 1rem; padding: 2rem; width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; transition: transform 0.2s; }
+    .card:hover { transform: translateY(-4px); }
+    .card h2 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .card p { font-size: 0.875rem; margin-bottom: 1.5rem; }
+    .card a { display: inline-block; padding: 0.75rem 2rem; border-radius: 0.75rem; color: white; text-decoration: none; font-weight: 600; font-size: 0.875rem; transition: opacity 0.2s; }
+    .card a:hover { opacity: 0.85; }
+    .card-1 { border-top: 4px solid #3b82f6; }
+    .card-1 a { background: #3b82f6; }
+    .card-2 { border-top: 4px solid #059669; }
+    .card-2 a { background: #059669; }
+    .card-3 { border-top: 4px solid #7c3aed; }
+    .card-3 a { background: linear-gradient(135deg, #7c3aed, #ec4899); }
+  </style>
+</head>
+<body>
+  <h1>Dr. Trung — Website Design Variants</h1>
+  <p>Chọn phong cách thiết kế bạn muốn xem:</p>
+  <div class="cards">
+    <div class="card card-1">
+      <h2>✦ Hiện đại, Tối giản</h2>
+      <p>Trắng – Xám – Xanh dương. Sạch sẽ, chuyên nghiệp.</p>
+      <a href="01-modern-minimalist.html">Xem ngay</a>
+    </div>
+    <div class="card card-2">
+      <h2>✦ Gần gũi, Thân thiện</h2>
+      <p>Kem ấm – Xanh lá. Ấm áp, dễ chịu.</p>
+      <a href="02-warm-friendly.html">Xem ngay</a>
+    </div>
+    <div class="card card-3">
+      <h2>✦ Trẻ trung, Năng động</h2>
+      <p>Gradient Tím – Hồng. Năng lượng, hiện đại.</p>
+      <a href="03-youthful-dynamic.html">Xem ngay</a>
+    </div>
+  </div>
+</body>
+</html>
